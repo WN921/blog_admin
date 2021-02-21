@@ -1,0 +1,12 @@
+.login-div{
+    display: flex;
+    box-sizing: border-box;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.Login-password{
+    margin-top: 2vh;
+    margin-bottom: 3vh;
+}
