@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import marked from 'marked';
 import '../static/css/AddBlog.css';
 import { baseUrl } from '../API/config';
 import { Row, Col, Input, Select, Button, Card, Tag, Checkbox, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { getLabelList, addBlog, updateBlog, getBlogById, uploadFile } from '../API/request';
-
+const HyperMD = require("hypermd");
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -14,29 +14,13 @@ function AddBlog(props) {
     const [blogId, setBlogId] = useState(0)  // 文章的ID，如果是0说明是新增加，如果不是0，说明是修改
     const [blogInfo, setBlogInfo] = useState(null);  //待修改文章的信息
     const [blogTitle, setBlogTitle] = useState('')   //文章标题
-    const [blogContent, setBlogContent] = useState('')  //markdown的编辑内容
-    const [markdownContent, setMarkdownContent] = useState('预览内容') //html内容
     const [absttract, setAbstract] = useState()            //简介
     const [labelList, setLabelList] = useState([]); //选择的标签信息
     const [checkedLabelList, setCheckedLabelList] = useState([]); //选中的标签列表
-    marked.setOptions({
-        renderer: new marked.Renderer(),
-        gfm: true,
-        pedantic: false,
-        sanitize: false,
-        tables: true,
-        breaks: false,
-        smartLists: true,
-        smartypants: false,
-    });
-
-    const changeContent = (e) => {
-        setBlogContent(e.target.value);
-        let HTML = marked(e.target.value);
-        setMarkdownContent(HTML);
-    }
+    const refHyper = useRef(null);
 
     const saveBlog = () => {
+        let blogContent = refHyper.current.getValue();
         if (!blogTitle) {
             message.error('必须输入标题');
             return false;
@@ -104,12 +88,13 @@ function AddBlog(props) {
                 message.error('获取指定博客失败')
                 return;
             }
+
             setBlogId(id);
             setBlogInfo(res.data)
             setBlogTitle(res.data.title);
-            setBlogContent(res.data.content);
-            let HTML = marked(res.data.content);
-            setMarkdownContent(HTML);
+            refHyper.current.setValue(res.data.content)
+            console.log(refHyper.current);
+            console.log(res.data.content)
             setAbstract(res.data.abstract);
             setCheckedLabelList(res.data.labels.map(item => (item.id)))
         })
@@ -130,6 +115,14 @@ function AddBlog(props) {
         })
     }, [])
     useEffect(() => {
+        const myTextarea = document.getElementById("TextForHyperMD")
+        let cm = HyperMD.fromTextArea(myTextarea, {
+            /* optional editor options here */
+            hmdModeLoader: false, // see NOTEs below
+        })
+        refHyper.current = cm;
+    }, [])
+    useEffect(() => {
         let BlogId = props.match.params.BlogId;
         if (!BlogId) {
             return;
@@ -137,8 +130,7 @@ function AddBlog(props) {
         else {
             getBlog(BlogId);
         }
-    }, [])
-
+    }, [props.match.params.BlogId])
 
     return (
         <div>
@@ -155,7 +147,7 @@ function AddBlog(props) {
                             />
                         </Col>
                         <Col span={8} className='AddBlog-Upload'>
-                            <Input placeholder="Basic usage" type='file'  onChange={ e => {
+                            <Input placeholder="Basic usage" type='file' onChange={e => {
                                 uploadFile(e.target.files[0]).then(res => {
                                     if (!res) {
                                         message.error('服务器没有响应');
@@ -166,30 +158,18 @@ function AddBlog(props) {
                                         return;
                                     }
                                     else {
-                                        message.success(baseUrl+res.data.path, 10);
+                                        message.success(baseUrl + res.data.path, 10);
                                     }
                                 })
-                            }}/>
+                            }} />
                         </Col>
                     </Row>
-                    <Row gutter={10} >
-                        <Col span={12}>
+                    <Row >
+                        <Col span={24} >
                             <TextArea
-                                value={blogContent}
-                                className="markdown-content"
+                                id='TextForHyperMD'
                                 rows={35}
-                                placeholder="文章内容"
-                                onChange={changeContent}
                             />
-                        </Col>
-                        <Col span={12}>
-                            <div
-                                className="show-html"
-                                dangerouslySetInnerHTML={{ __html: markdownContent }}
-                            >
-
-                            </div>
-
                         </Col>
                     </Row>
                 </Col>

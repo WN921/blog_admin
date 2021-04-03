@@ -108,3 +108,7 @@
 .AddBlog-TitleRow{
     margin-bottom: 1vh;
 }
+
+.cm-s-hypermd-light{
+    height: 70vh !important;
+}
