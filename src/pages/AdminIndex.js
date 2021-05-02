@@ -25,15 +25,17 @@ function AdminIndex(props) {
             <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
                 <div className="logo" />
                 <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-                    <Menu.Item key="1" icon={<PieChartOutlined />} onClick={() => { setCurPage('工作台') }}>
-                        工作台
-                    </Menu.Item>
 
-                    <SubMenu key="sub1" icon={<UserOutlined />} title="管理博客" onClick={() => { setCurPage('管理博客') }}>
-                        <Menu.Item key="3">
+                    <SubMenu key="sub1" icon={<UserOutlined />} title="工作台" onClick={() => { setCurPage('工作台') }}>
+                        <Menu.Item key="标签管理">
+                            <Link to='/AdminIndex/AddBlog'>标签管理</Link>
+                        </Menu.Item>
+                    </SubMenu>
+                    <SubMenu key="管理博客" icon={<UserOutlined />} title="管理博客" onClick={() => { setCurPage('管理博客') }}>
+                        <Menu.Item key="添加博客">
                             <Link to='/AdminIndex/AddBlog'>添加博客</Link>
                         </Menu.Item>
-                        <Menu.Item key="4">
+                        <Menu.Item key="博客列表">
                             <Link to='/AdminIndex/BlogList'>博客列表</Link>
                         </Menu.Item>
                     </SubMenu>
