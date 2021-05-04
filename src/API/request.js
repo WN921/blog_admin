@@ -7,6 +7,17 @@ export const login = (data) => {
 export const getLabelList = () => {
     return axiosInstance.get("/api/label");
 }
+export const addLabel = (labelName, color) => {
+    const params = {
+        labelName,
+        color
+    }
+    return axiosInstance.post("/api/label", params);
+}
+
+export const deleteLabel = (labelId) => {
+    return axiosInstance.delete(`/api/label/${labelId}`);
+}
 
 export const addBlog = (data) => {
     return axiosInstance.post("/api/blog", data);

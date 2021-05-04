@@ -11,6 +11,7 @@ import '../static/css/AdminIndex.css';
 import { Switch, Route, Link } from 'react-router-dom';
 import AddBlog from './AddBlog';
 import BlogList from './BlogList';
+import Label from './Label';
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
@@ -28,7 +29,7 @@ function AdminIndex(props) {
 
                     <SubMenu key="sub1" icon={<UserOutlined />} title="工作台" onClick={() => { setCurPage('工作台') }}>
                         <Menu.Item key="标签管理">
-                            <Link to='/AdminIndex/AddBlog'>标签管理</Link>
+                            <Link to='/AdminIndex/Label'>标签管理</Link>
                         </Menu.Item>
                     </SubMenu>
                     <SubMenu key="管理博客" icon={<UserOutlined />} title="管理博客" onClick={() => { setCurPage('管理博客') }}>
@@ -52,6 +53,7 @@ function AdminIndex(props) {
                     </Breadcrumb>
                     <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
                         <Switch>
+                            <Route path='/AdminIndex/Label' component={Label} />
                             <Route path='/AdminIndex/AddBlog/:BlogId' component={AddBlog} />
                             <Route path='/AdminIndex/AddBlog/' component={AddBlog} />
                             <Route path='/AdminIndex/BlogList' component={BlogList} />

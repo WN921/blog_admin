@@ -7,10 +7,6 @@ import { Content } from 'antd/lib/layout/layout';
 const { confirm } = Modal;
 
 
-
-
-
-
 function BlogList(props) {
     const [list, setList] = useState([]);
     const [blogList, setBlogList] = useState([]);
